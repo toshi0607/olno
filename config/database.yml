@@ -12,3 +12,12 @@ development:
   username: olno
   password:
   host: localhost
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: olno_test
+  pool: 5
+  username: olno
+  password:
+  host: localhost
