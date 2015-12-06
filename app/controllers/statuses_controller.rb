@@ -25,18 +25,15 @@ class StatusesController < ApplicationController
     if params[:toggle] == '1'
       @status = Status.new(status_params)
       @status.logged_in_at = Time.current
-      @status.save
     else
       @status = Status.where(user_id: params[:status][:user_id]).last
       # login記録がないがlogoutしようとした場合は何もしない
-      if @status
-        @status.logged_out_at = Time.current unless @status.try(:logged_out_at)
-        @status.save
+      if @status && @status.logged_out_at.nil?
+        @status.logged_out_at = Time.current
       end
     end
-
-    @statuses = Status.all
-    render action: :index
+    @status.save
+    render status: :created
   end
 
   # PATCH/PUT /statuses/1
