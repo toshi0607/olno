@@ -22,18 +22,19 @@ class StatusesController < ApplicationController
   end
 
   def create
-    if params[:toggle] == '1'
+    if params[:status][:toggle] == '1'
       @status = Status.new(status_params)
       @status.logged_in_at = Time.current
+      @status.save
     else
       @status = Status.where(user_id: params[:status][:user_id]).last
       # login記録がないがlogoutしようとした場合は何もしない
       if @status && @status.logged_out_at.nil?
         @status.logged_out_at = Time.current
+        @status.save
       end
     end
-    @status.save
-    render status: :created
+    render json: { status: "ok" }
   end
 
   # PATCH/PUT /statuses/1
@@ -68,6 +69,6 @@ class StatusesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def status_params
-      params.require(:status).permit(:user_id, :toggle)
+      params.require(:status).permit(:user_id)
     end
 end
