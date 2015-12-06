@@ -27,7 +27,7 @@ class StatusesController < ApplicationController
       @status.logged_in_at = Time.current
       @status.save
     else
-      @status = Status.where(user_id: params[:status][:user_id]).last
+      @status = Status.where(user_id: status_params[:user_id]).last
       # login記録がないがlogoutしようとした場合は何もしない
       if @status && @status.logged_out_at.nil?
         @status.logged_out_at = Time.current
