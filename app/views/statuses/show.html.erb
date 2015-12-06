@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @status.user_id %>
+</p>
+
+<p>
+  <strong>Logged in at:</strong>
+  <%= @status.logged_in_at %>
+</p>
+
+<p>
+  <strong>Logged out at:</strong>
+  <%= @status.logged_out_at %>
+</p>
+
+<%= link_to 'Edit', edit_status_path(@status) %> |
+<%= link_to 'Back', statuses_path %>
