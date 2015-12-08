@@ -21,20 +21,20 @@ class StatusesController < ApplicationController
   def edit
   end
 
-  # POST /statuses
-  # POST /statuses.json
   def create
-    @status = Status.new(status_params)
-
-    respond_to do |format|
-      if @status.save
-        format.html { redirect_to @status, notice: 'Status was successfully created.' }
-        format.json { render :show, status: :created, location: @status }
-      else
-        format.html { render :new }
-        format.json { render json: @status.errors, status: :unprocessable_entity }
+    if params[:status][:toggle] == '1'
+      @status = Status.new(status_params)
+      @status.logged_in_at = Time.current
+      @status.save
+    else
+      @status = Status.where(user_id: status_params[:user_id]).last
+      # login記録がないがlogoutしようとした場合は何もしない
+      if @status && @status.logged_out_at.nil?
+        @status.logged_out_at = Time.current
+        @status.save
       end
     end
+    render json: { status: "ok" }
   end
 
   # PATCH/PUT /statuses/1
@@ -69,6 +69,6 @@ class StatusesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def status_params
-      params.require(:status).permit(:user_id, :logged_in_at, :logged_out_at)
+      params.require(:status).permit(:user_id)
     end
 end
